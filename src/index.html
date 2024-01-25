@@ -7,16 +7,21 @@
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
-    <form id="form">
-      <input type="text" placeholder="Search images..." name="picture"/>
-      <button type="submit">Search</button>
-    </form>
+    <div class="container">
+      <form class="form" id="form">
+        <input
+          class="form-input"
+          type="text"
+          placeholder="Search images..."
+          name="picture"
+        />
+        <button class="form-button" type="submit">Search</button>
+      </form>
 
-    <ul class="gallery" id="result-container"></ul>
-    <script type="module" src="./main.js"></script>
+      <div class="loader is-hidden"></div>
 
-
-
-
+      <ul class="gallery" id="result-container"></ul>
+      <script type="module" src="./main.js"></script>
+    </div>
   </body>
 </html>

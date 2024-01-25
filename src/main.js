@@ -9,12 +9,14 @@ const API_KEY = '41929630-0ce2e4f7023522073d7143cb8';
 const refs = {
   form: document.getElementById('form'),
   resultContainer: document.getElementById('result-container'),
+  loader: document.querySelector('.loader'),
 };
 
 refs.form.addEventListener('submit', handleSearch);
 
 function handleSearch(event) {
   event.preventDefault();
+  refs.loader.classList.remove('is-hidden');
 
   const form = event.currentTarget;
   const picture = form.elements.picture.value;
@@ -25,13 +27,19 @@ function handleSearch(event) {
 
       if (pictures.length === 0) {
         iziToast.error({
+          position: 'topRight',
           message:
             'Sorry, there are no images matching your search query. Please try again!',
         });
       }
+
       createMarkup(pictures);
     })
-    .finally(() => form.reset());
+    .catch(err => console.log(err))
+    .finally(() => {
+      form.reset();
+      refs.loader.classList.add('is-hidden');
+    });
 }
 
 function searchPicturesByParams(picture) {
@@ -41,7 +49,7 @@ function searchPicturesByParams(picture) {
     image_type: 'photo',
     orientation: 'horizontal',
     safesearch: true,
-    per_page: 9,
+    per_page: 15,
   });
 
   return fetch(`${BASE_URL}?${urlParams}`).then(response => {
@@ -70,17 +78,16 @@ function createMarkup(hits) {
         downloads,
       }) => `<li class="gallery-item">
             <a href="${largeImageURL}">
-  <img src="${webformatURL}" alt="${tags}"></a>
-  <ul>
-    <li>Likes: ${likes}</li>
-    <li>Views: ${views}</li>
-    <li>Comments: ${comments}</li>
-    <li>Downloads: ${downloads}</li>
+  <img src="${webformatURL}" alt="${tags}" width="370" heigth="300"></a>
+  <ul class="info-list">
+    <li class="info-item">Likes: ${likes}</li>
+    <li class="info-item">Views: ${views}</li>
+    <li class="info-item">Comments: ${comments}</li>
+    <li class="info-item">Downloads: ${downloads}</li>
   </ul>
 </li>`
     )
     .join('');
   refs.resultContainer.innerHTML = markUp;
-  refresh()
-  lightbox.refresh()
+  lightbox.refresh();
 }
