@@ -22,31 +22,14 @@ function handleSearch(event) {
   searchPicturesByParams(picture)
     .then(data => {
       const pictures = data.hits;
-      const markUp = pictures
-        .map(
-          ({
-            webformatURL,
-            largeImageURL,
-            tags,
-            likes,
-            views,
-            comments,
-            downloads,
-          }) => {
-            return `<li class="gallery-item">
-            <a href="${largeImageURL}">
-  <img src="${webformatURL}" alt="${tags}"></a>
-  <ul>
-    <li>Likes: ${likes}</li>
-    <li>Views: ${views}</li>
-    <li>Comments: ${comments}</li>
-    <li>Downloads: ${downloads}</li>
-  </ul>
-</li>`;
-          }
-        )
-        .join("");
-      refs.resultContainer.innerHTML = markUp;
+
+      if (pictures.length === 0) {
+        iziToast.error({
+          message:
+            'Sorry, there are no images matching your search query. Please try again!',
+        });
+      }
+      createMarkup(pictures);
     })
     .finally(() => form.reset());
 }
@@ -71,6 +54,33 @@ function searchPicturesByParams(picture) {
 
 let lightbox = new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
-  captionPosition: 'bottom',
   captionDelay: 250,
 });
+
+function createMarkup(hits) {
+  const markUp = hits
+    .map(
+      ({
+        webformatURL,
+        largeImageURL,
+        tags,
+        likes,
+        views,
+        comments,
+        downloads,
+      }) => `<li class="gallery-item">
+            <a href="${largeImageURL}">
+  <img src="${webformatURL}" alt="${tags}"></a>
+  <ul>
+    <li>Likes: ${likes}</li>
+    <li>Views: ${views}</li>
+    <li>Comments: ${comments}</li>
+    <li>Downloads: ${downloads}</li>
+  </ul>
+</li>`
+    )
+    .join('');
+  refs.resultContainer.innerHTML = markUp;
+  refresh()
+  lightbox.refresh()
+}
