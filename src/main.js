@@ -78,7 +78,7 @@ function createMarkup(hits) {
         downloads,
       }) => `<li class="gallery-item">
             <a href="${largeImageURL}">
-  <img src="${webformatURL}" alt="${tags}" width="370" heigth="300"></a>
+  <img class="gallery-image" src="${webformatURL}" alt="${tags}" width="370" heigth="300"></a>
   <ul class="info-list">
     <li class="info-item">Likes: ${likes}</li>
     <li class="info-item">Views: ${views}</li>
